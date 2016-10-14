@@ -4,6 +4,7 @@ import argparse
 import sys
 import os.path
 import csv
+import shutil
 
 #引数や-hのオプションを定義
 if __name__ == '__main__':
@@ -25,19 +26,39 @@ def errorEnd(checkErrorNum):
 def isDirCheck(folderName):
     isdirTF = os.path.isdir(folderName)
     if not isdirTF:
-        print '\'{}\'というディレクトリは存在しません'.format(folderName)
+        print '\'{}\' is not exist.'.format(folderName)
     return isdirTF
 
 #ファイルの有無をチェック
 def isFileCheck(fileName):
     isfileTF = os.path.isfile(fileName)
     if not isfileTF:
-        print '\'{}\'というファイルは存在しません'.format(fileName)
+        print '\'{}\' is not exist.'.format(fileName)
     return isfileTF
 
 
 #CSVファイルの読み出し
+def readCsvFile(csvFile):
+    readList = []
+    with open(csvfile, 'rb') as f:
+        csvReader = csv.reader(f)
+        for row in csvReader:
+            readList.append(row)
+    return readList
 
+
+#csvオブジェクトからJsonファイル名を取得・コピー
+def copyJsonFile(csvReader, copyfolder, sendfolder):
+    #print type(csvReader)
+    for row in csvReader:
+        #print row[0]
+        fpCName = '{path}{fname}'.format(path=copyfolder,fname=row[0])
+        fpSName = '{path}{fname}'.format(path=sendfolder,fname=row[0])
+        if not os.path.isfile(fpCName):
+            print '\'{}\' is not exist.'.format(fpCName)
+        else:
+            shutil.copyfile(fpCName, fpSName)
+    return 0
 
 # エラーチェック用変数
 eCheck = True
@@ -60,6 +81,10 @@ if __name__ == '__main__':
     csvfile = arguMain.CSVFile
     eCheck = isFileCheck(csvfile)
     errorEnd(eCheck)
+
+    #CSVファイルの内容を読み込む（Jsonファイル名リスト）
+    readList = readCsvFile(csvfile)
+    copyJsonFile(readList, copyfolder, sendfolder)
     print 'a'
 
 
