@@ -3,3 +3,5 @@
 １．FindFile.py
         Jsonファイルリストから特定のファイルをコピーして持ってくる
 
+２．DivisionJsonFile.py
+        Jsonファイル内のキーごとによってファイルを分割する

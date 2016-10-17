@@ -40,7 +40,7 @@ def isFileCheck(fileName):
 #CSVファイルの読み出し
 def readCsvFile(csvFile):
     readList = []
-    with open(csvfile, 'rb') as f:
+    with open(csvFile, 'rb') as f:
         csvReader = csv.reader(f)
         for row in csvReader:
             readList.append(row)
