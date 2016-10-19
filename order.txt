@@ -5,3 +5,7 @@
 
 ２．DivisionJsonFile.py
         Jsonファイル内のキーごとによってファイルを分割する
+
+３．VirusTotalResult.py
+        CSVファイルにある（分割済み）Jsonファイル内のVirusTotalの検知結果をCSVファイルに書き込む
+

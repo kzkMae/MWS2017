@@ -1,10 +1,11 @@
 #coding:utf-8
 
 import argparse
-import sys
 import os.path
-import csv
 import shutil
+
+#Function.py内の関数にアクセス
+from Function import *
 
 #引数や-hのオプションを定義
 if __name__ == '__main__':
@@ -14,37 +15,6 @@ if __name__ == '__main__':
     parser.add_argument('CopyFolder',type=str, help='コピー元のフォルダを指定, 型：%(type)s，String')
     parser.add_argument('SendFolder',type=str, help='コピー先のフォルダを指定, 型：%(type)s，String')
     parser.add_argument('CSVFile',type=str, help='探すJsonファイルのリストを格納したCSVファイルを指定, 型：%(type)s，String')
-
-#エラー終了
-def errorEnd(checkErrorNum):
-    if not checkErrorNum:
-        print '終了します'
-        sys.exit()
-    return 0
-
-#フォルダの有無をチェック
-def isDirCheck(folderName):
-    isdirTF = os.path.isdir(folderName)
-    if not isdirTF:
-        print '\'{}\' is not exist.'.format(folderName)
-    return isdirTF
-
-#ファイルの有無をチェック
-def isFileCheck(fileName):
-    isfileTF = os.path.isfile(fileName)
-    if not isfileTF:
-        print '\'{}\' is not exist.'.format(fileName)
-    return isfileTF
-
-
-#CSVファイルの読み出し
-def readCsvFile(csvFile):
-    readList = []
-    with open(csvFile, 'rb') as f:
-        csvReader = csv.reader(f)
-        for row in csvReader:
-            readList.append(row)
-    return readList
 
 
 #csvオブジェクトからJsonファイル名を取得・コピー

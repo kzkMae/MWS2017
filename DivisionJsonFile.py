@@ -5,10 +5,7 @@ import os.path
 import json
 
 #自作の関数をインポート
-from FindFile import errorEnd
-from FindFile import isDirCheck
-from FindFile import isFileCheck
-from FindFile import readCsvFile
+from Function import *
 
 
 #関数定義
@@ -79,6 +76,8 @@ if __name__ == '__main__':
     readList = readCsvFile(csvfile)
     #Jsonファイル内のキーごとにファイルを分割
     jsonFileDivision(readList,copyfolder, sendfolder)
+
+
 
 
 
