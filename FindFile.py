@@ -51,8 +51,8 @@ if __name__ == '__main__':
     checker.isFileCheck(csvfile)
 
     #CSVファイルの内容を読み込む（Jsonファイル名リスト）
-    readList = readCsvFile(csvfile)
-    copyJsonFile(readList, copyfolder, sendfolder)
+    jsonFileList = RWCsvFile(csvfile)
+    copyJsonFile(jsonFileList.getList(), copyfolder, sendfolder)
     print 'a'
 
 

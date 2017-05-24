@@ -6,38 +6,6 @@ import os.path
 import csv
 import glob
 
-#エラー終了
-def errorEnd(checkErrorNum):
-    if not checkErrorNum:
-        print '終了します'
-        sys.exit()
-    return 0
-
-
-#フォルダの有無をチェック
-def isDirCheck(folderName):
-    isdirTF = os.path.isdir(folderName)
-    if not isdirTF:
-        print '\'{}\' is not exist.'.format(folderName)
-    return isdirTF
-
-
-#ファイルの有無をチェック
-def isFileCheck(fileName):
-    isfileTF = os.path.isfile(fileName)
-    if not isfileTF:
-        print '\'{}\' is not exist.'.format(fileName)
-    return isfileTF
-
-
-#CSVファイルの読み出し
-def readCsvFile(csvFile):
-    readList = []
-    with open(csvFile, 'rb') as f:
-        csvReader = csv.reader(f)
-        for row in csvReader:
-            readList.append(row)
-    return readList
 
 
 #CSVファイルにリストを書き出し
@@ -56,7 +24,7 @@ def getFilePathName(path, fetc):
     searchName = '{fpath}*{fileEtc}'.format(fpath=path,fileEtc=fetc)
     return glob.glob(searchName)
 
-
+#ファイル・フォルダの有無検知クラス
 class FFBasicError:
     def __init__(self):
         self._eCheck = True
@@ -76,3 +44,19 @@ class FFBasicError:
         if not self._eCheck:
             print "'{}' is not exist.".format(fileName)
             self._errorEnd()
+
+# CSV操作用のクラス
+class RWCsvFile:
+    def __init__(self, csvfile):
+        self._csvfile = csvfile
+    def _readCSVFile(self):
+        #CSVファイルの中身をリスト化
+        self._readList = []
+        with open(self._csvfile, 'rb') as f:
+            csvReader = csv.reader(f)
+            for row in csvReader:
+                self._readList.append(row)
+    def getList(self):
+        #リストを返却
+        self._readCSVFile()
+        return self._readList
