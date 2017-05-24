@@ -30,27 +30,25 @@ def copyJsonFile(csvReader, copyfolder, sendfolder):
             shutil.copyfile(fpCName, fpSName)
     return 0
 
-# エラーチェック用変数
-eCheck = True
 
 if __name__ == '__main__':
     # 引数格納
     arguMain = parser.parse_args()
 
+    #チェック用オブジェクト
+    checker = FFBasicError()
+
     # コピー元フォルダを格納
     copyfolder = arguMain.CopyFolder
-    eCheck = isDirCheck(copyfolder)
-    errorEnd(eCheck)
+    checker.isDirCheck(copyfolder)
 
     # 宛先フォルダを格納
     sendfolder = arguMain.SendFolder
-    eCheck = isDirCheck(sendfolder)
-    errorEnd(eCheck)
+    checker.isDirCheck(sendfolder)
 
     # CSVファイルを指定
     csvfile = arguMain.CSVFile
-    eCheck = isFileCheck(csvfile)
-    errorEnd(eCheck)
+    checker.isFileCheck(csvfile)
 
     #CSVファイルの内容を読み込む（Jsonファイル名リスト）
     readList = readCsvFile(csvfile)

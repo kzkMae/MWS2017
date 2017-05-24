@@ -4,7 +4,7 @@
 import sys
 import os.path
 import csv
-
+import glob
 
 #エラー終了
 def errorEnd(checkErrorNum):
@@ -51,5 +51,28 @@ def writeCsvFilebyList(fileName, writeList):
     return 0
 
 
+#フォルダ内の特定の拡張子の相対パスとファイル名を取得
+def getFilePathName(path, fetc):
+    searchName = '{fpath}*{fileEtc}'.format(fpath=path,fileEtc=fetc)
+    return glob.glob(searchName)
 
 
+class FFBasicError:
+    def __init__(self):
+        self._eCheck = True
+    def _errorEnd(self):
+        # チェック用
+        print '終了します'
+        sys.exit()
+    def isDirCheck(self,folderName):
+        # フォルダの有無をチェック
+        self._eCheck = os.path.isdir(folderName)
+        if not self._eCheck:
+            print "'{}' is not exist.".format(folderName)
+            self._errorEnd()
+    def isFileCheck(self,fileName):
+        # ファイルの有無をチェック
+        self._eCheck = os.path.isfile(fileName)
+        if not self._eCheck:
+            print "'{}' is not exist.".format(fileName)
+            self._errorEnd()
