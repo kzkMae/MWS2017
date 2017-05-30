@@ -7,6 +7,12 @@ import json
 #自作の関数をインポート
 from Function import *
 
+#クラス定義
+class OperateJsonFile:
+    def __init__(self,name,cfolder,sfolder):
+        self.name = name
+        self._fpCName = '{cfolder}/{name}'.format(cfolder=cfolder,name=name)
+        #ここかから
 
 #関数定義
 #キーごとにファイルを作成
@@ -42,9 +48,6 @@ def jsonFileDivision(rowsList, copyFolder, sendFolder):
     return 0
 
 
-#エラーチェック用変数
-eCheck = 0
-
 #引数や-hのオプションを定義
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='MWS課題，動的解析用プログラム_ファイル分割',description='オプションと引数の説明',
@@ -57,25 +60,25 @@ if __name__ == '__main__':
     #引数格納
     arguMain = parser.parse_args()
 
+    #エラー検知用のオブジェクト
+    checker = FFBasicError()
+
     # コピー元フォルダを格納
     copyfolder = arguMain.CopyFolder
-    eCheck = isDirCheck(copyfolder)
-    errorEnd(eCheck)
+    checker.isDirCheck(copyfolder)
 
     # 宛先フォルダを格納
     sendfolder = arguMain.SendFolder
-    eCheck = isDirCheck(sendfolder)
-    errorEnd(eCheck)
+    checker.isDirCheck(sendfolder)
 
     # CSVファイルを指定
     csvfile = arguMain.CSVFile
-    eCheck = isFileCheck(csvfile)
-    errorEnd(eCheck)
+    checker.isFileCheck(csvfile)
 
     # CSVファイルの内容を読み込む（Jsonファイル名リスト）
-    readList = readCsvFile(csvfile)
+    readList = RWCsvFile(csvfile)
     #Jsonファイル内のキーごとにファイルを分割
-    jsonFileDivision(readList,copyfolder, sendfolder)
+    jsonFileDivision(readList.getList(),copyfolder, sendfolder)
 
 
 
