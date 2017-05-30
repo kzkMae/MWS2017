@@ -19,15 +19,9 @@ if __name__ == '__main__':
 
 #csvオブジェクトからJsonファイル名を取得・コピー
 def copyJsonFile(csvReader, copyfolder, sendfolder):
-    #print type(csvReader)
     for row in csvReader:
-        #print row[0]
-        fpCName = '{path}{fname}'.format(path=copyfolder,fname=row[0])
-        fpSName = '{path}{fname}'.format(path=sendfolder,fname=row[0])
-        if not os.path.isfile(fpCName):
-            print '\'{}\' is not exist.'.format(fpCName)
-        else:
-            shutil.copyfile(fpCName, fpSName)
+        opjfile = OperateJsonFile(name=row[0],cfolder=copyfolder, sfolder=sendfolder)
+        opjfile.copyJsonFile()
     return 0
 
 

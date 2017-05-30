@@ -5,6 +5,7 @@ import sys
 import os.path
 import csv
 import glob
+import shutil
 
 
 
@@ -60,3 +61,30 @@ class RWCsvFile:
         #リストを返却
         self._readCSVFile()
         return self._readList
+
+
+#クラス定義
+class OperateJsonFile:
+    def __init__(self,name,cfolder,sfolder):
+        self.name = name
+        self._fpCName = '{cfolder}/{name}'.format(cfolder=cfolder,name=name)
+        self._dpSName = '{sfolder}/{name}'.format(sfolder=sfolder,name=name)
+        self.cfolder = cfolder
+        self.sfolder = sfolder
+    #ファイルがあるかの確認
+    def _getIsFile(self):
+        if os.path.isfile(self._fpCName):
+            return True
+        else:
+            print "'{jsonfilename}' is not exist.".format(jsonfilename=self._fpCName)
+            return False
+    #Jsonファイルをコピー
+    def copyJsonFile(self):
+        if self._getIsFile():
+            shutil.copyfile(self._fpCName,self._dpSName)
+    #Jsonファイルを分割するメソッド
+    def divisionJsonFile(self):
+        if self._getIsFile():
+            #Jsonファイル名と同じフォルダを作成
+            jName, ext = os.path.split(self.sfolder)
+
