@@ -7,12 +7,6 @@ import json
 #自作の関数をインポート
 from Function import *
 
-#クラス定義
-class OperateJsonFile:
-    def __init__(self,name,cfolder,sfolder):
-        self.name = name
-        self._fpCName = '{cfolder}/{name}'.format(cfolder=cfolder,name=name)
-        #ここかから
 
 #関数定義
 #キーごとにファイルを作成
@@ -29,22 +23,8 @@ def jsonCreateKeyFile(jsondata, sendFolder):
 #Jsonファイル内のキーごとに分割
 def jsonFileDivision(rowsList, copyFolder, sendFolder):
     for row in rowsList:
-        fpCName = "{}{}".format(copyFolder,row[0])
-        #print fpCName
-        if not os.path.isfile(fpCName):
-            print '\'{}\' is not exist.'.format(fpCName)
-        else:
-            #Jsonファイル名と同じフォルダを作成
-            jName, ext = os.path.splitext(row[0])
-            dpSName = '{}{}'.format(sendFolder,jName)
-            #print dpSName
-            if not(os.path.isdir(dpSName)):
-                os.mkdir(dpSName)
-
-            with open(fpCName, 'r') as f:
-                jsonData = json.load(f)
-                jsonCreateKeyFile(jsonData,dpSName)
-                #print type(jsonData.keys())
+        opjfile = OperateJsonFile(name=row[0],cfolder=copyFolder, sfolder=sendfolder)
+        opjfile.divisionJsonFile()
     return 0
 
 
@@ -79,6 +59,7 @@ if __name__ == '__main__':
     readList = RWCsvFile(csvfile)
     #Jsonファイル内のキーごとにファイルを分割
     jsonFileDivision(readList.getList(),copyfolder, sendfolder)
+
 
 
 

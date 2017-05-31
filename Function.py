@@ -6,6 +6,7 @@ import os.path
 import csv
 import glob
 import shutil
+import json
 
 
 
@@ -78,13 +79,47 @@ class OperateJsonFile:
         else:
             print "'{jsonfilename}' is not exist.".format(jsonfilename=self._fpCName)
             return False
+    #ファイルの中身の読出し
+    def readJsonFile(self):
+        jsondata = None
+        if self._getIsFile():
+            with open(self._fpCName,'r') as f:
+                jsondata = json.load(f)
+        return jsondata
     #Jsonファイルをコピー
     def copyJsonFile(self):
         if self._getIsFile():
             shutil.copyfile(self._fpCName,self._dpSName)
+    #キー毎のファイル作成
+    def createKeyNameFile(self,jdata):
+        for key in jdata.keys():
+            jdata_key = jdata[key]
+            newKeyFName = "{folder}/{name}.json".format(folder=self.dpSFName,name=key)
+            if not os.path.isfile(newKeyFName):
+                with open(newKeyFName, 'w') as f:
+                    json.dump(jdata_key, f, indent=4)
+        self._writeKeyList(keylist=jdata.keys(),folder=self.dpSFName,name=self.name)
     #Jsonファイルを分割するメソッド
     def divisionJsonFile(self):
         if self._getIsFile():
             #Jsonファイル名と同じフォルダを作成
-            jName, ext = os.path.split(self.sfolder)
+            jName, ext = os.path.splitext(self.name)
+            self.dpSFName = '{sfolder}/{jname}'.format(sfolder=self.sfolder,jname=jName)
+            if not os.path.isdir(self.dpSFName):
+                os.mkdir(self.dpSFName)
+            #jsonファイルの読み込み
+            jsondata = self.readJsonFile()
+            if jsondata is None:
+                print "'{}' is None".format(self.name)
+            else:
+                #分割処理メソッドへ（今後の）
+                self.createKeyNameFile(jsondata)
+    #キーリストをファイル化（ここから）
+    def _writeKeyList(self,keylist,folder,name):
+        filename = "{}/keys_{}.csv".format(folder,name)
+        with open(filename,'wb') as f:
+            csvWrite = csv.writer(f)
+            for row in keylist:
+                csvWrite.writerow([row])
+        #print 'a'
 
