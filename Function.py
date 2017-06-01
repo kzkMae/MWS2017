@@ -10,21 +10,21 @@ import json
 
 
 
-#CSVファイルにリストを書き出し
-def writeCsvFilebyList(fileName, writeList):
-    if not fileName.endswith('.csv'):
-        fileName = '{}.csv'.format(fileName)
-    with open(fileName, 'wb') as fcsv:
-        csvWrite = csv.writer(fcsv)
-        for row in writeList:
-            csvWrite.writerow(row)
-    return 0
+# #CSVファイルにリストを書き出し
+# def writeCsvFilebyList(fileName, writeList):
+#     if not fileName.endswith('.csv'):
+#         fileName = '{}.csv'.format(fileName)
+#     with open(fileName, 'wb') as fcsv:
+#         csvWrite = csv.writer(fcsv)
+#         for row in writeList:
+#             csvWrite.writerow(row)
+#     return 0
 
 
-#フォルダ内の特定の拡張子の相対パスとファイル名を取得
-def getFilePathName(path, fetc):
-    searchName = '{fpath}*{fileEtc}'.format(fpath=path,fileEtc=fetc)
-    return glob.glob(searchName)
+# #フォルダ内の特定の拡張子の相対パスとファイル名を取得
+# def getFilePathName(path, fetc):
+#     searchName = '{fpath}*{fileEtc}'.format(fpath=path,fileEtc=fetc)
+#     return glob.glob(searchName)
 
 #ファイル・フォルダの有無検知クラス
 class FFBasicError:
@@ -34,12 +34,24 @@ class FFBasicError:
         # チェック用
         print '終了します'
         sys.exit()
+    def boolDirCheck(self,folderName):
+        #True or False
+        self._eCheck = os.path.isdir(folderName)
+        if not self._eCheck:
+            print "'{}' is not exist.".format(folderName)
+        return self._eCheck
     def isDirCheck(self,folderName):
         # フォルダの有無をチェック
         self._eCheck = os.path.isdir(folderName)
         if not self._eCheck:
             print "'{}' is not exist.".format(folderName)
             self._errorEnd()
+    def boolFileCheck(self,fileName):
+        # ファイルの有無をチェック
+        self._eCheck = os.path.isfile(fileName)
+        if not self._eCheck:
+            print "'{}' is not exist.".format(fileName)
+        return self._eCheck
     def isFileCheck(self,fileName):
         # ファイルの有無をチェック
         self._eCheck = os.path.isfile(fileName)
@@ -63,10 +75,21 @@ class RWCsvFile:
         self._readCSVFile()
         return self._readList
 
+# フォルダリストを格納するクラス
+class FolderLists:
+    def __init__(self, dir):
+        self.dir = dir
+        self._fflist = os.listdir(dir)
+    def getFolderList(self):
+        self._folders = [f for f in self._fflist if os.path.isdir(os.path.join(self.dir,f))]
+        return  self._folders
+    def getFileList(self):
+        self._files = [f for f in self._fflist if os.path.isfile(os.path.join(self.dir,f))]
+        return self._files
 
 #クラス定義
 class OperateJsonFile:
-    def __init__(self,name,cfolder,sfolder):
+    def __init__(self,name,cfolder="./",sfolder="./"):
         self.name = name
         self._fpCName = '{cfolder}/{name}'.format(cfolder=cfolder,name=name)
         self._dpSName = '{sfolder}/{name}'.format(sfolder=sfolder,name=name)
@@ -114,7 +137,7 @@ class OperateJsonFile:
             else:
                 #分割処理メソッドへ（今後の）
                 self.createKeyNameFile(jsondata)
-    #キーリストをファイル化（ここから）
+    #キーリストをファイル化
     def _writeKeyList(self,keylist,folder,name):
         filename = "{}/keys_{}.csv".format(folder,name)
         with open(filename,'wb') as f:
@@ -123,3 +146,6 @@ class OperateJsonFile:
                 csvWrite.writerow([row])
         #print 'a'
 
+class NetworkJsonFile(OperateJsonFile):
+    def test(self):
+        print 'a'
