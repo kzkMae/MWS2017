@@ -7,18 +7,9 @@ import csv
 import glob
 import shutil
 import json
+import pandas as pd
 
 
-
-# #CSVファイルにリストを書き出し
-# def writeCsvFilebyList(fileName, writeList):
-#     if not fileName.endswith('.csv'):
-#         fileName = '{}.csv'.format(fileName)
-#     with open(fileName, 'wb') as fcsv:
-#         csvWrite = csv.writer(fcsv)
-#         for row in writeList:
-#             csvWrite.writerow(row)
-#     return 0
 
 
 # #フォルダ内の特定の拡張子の相対パスとファイル名を取得
@@ -74,7 +65,27 @@ class RWCsvFile:
         #リストを返却
         self._readCSVFile()
         return self._readList
+    def createCSV(self,where='./',data=None):
+        self.where = '{}/'.format(where)
+        self._writeCSV(data)
+    def _writeCSV(self,writelist):
+        with open("{path}/{filename}.csv".format(path=self.where,filename=self._csvfile),'wb') as f:
+            csvWrite = csv.writer(f)
+            if writelist.__len__() == 1:
+                csvWrite.writerow(writelist)
+            elif writelist.__len__() > 1:
+                csvWrite.writerows(writelist)
+    def createPDCSV(self, where='./', data=None):
+        self.where = '{}/'.format(where)
+        self._writeCSVdataframe(data)
+    def _writeCSVdataframe(self,writelist):
+        writepd = pd.DataFrame(writelist)
+        writepd.to_csv("{path}/{filename}.csv".format(path=self.where,filename=self._csvfile),
+                       header=False,index=False,sep=",")
 
+
+
+    
 # フォルダリストを格納するクラス
 class FolderLists:
     def __init__(self, dir):
@@ -145,7 +156,27 @@ class OperateJsonFile:
             for row in keylist:
                 csvWrite.writerow([row])
         #print 'a'
+    def getKey(self):
+        self.jdata = self.readJsonFile()
+        self.jkey = self.jdata.keys()
+    def hasKey(self,keyname):
+        return self.jdata.has_key(keyname)
 
+#Network専用のクラス（OperateJsonFileを継承）
 class NetworkJsonFile(OperateJsonFile):
-    def test(self):
-        print 'a'
+    def getUDP(self, jdata):
+        self.udp = jdata["udp"]
+        self._analyzeUDP()
+    #UDP情報を整理リスト化
+    def _analyzeUDP(self):
+        self.udpdatalist = []
+        for data in self.udp:
+            #print data
+            src = '{source}:{sport}'.format(source=data['src'],sport=data['sport'])
+            dst = '{dst}:{dport}'.format(dst=data['dst'],dport=data['dport'])
+            offset = data['offset']
+            udptime = data['time']
+            udpdata = [udptime,src,dst,offset]
+            self.udpdatalist.append(udpdata)
+        #print udpdatalist
+        self.udpdatalist.sort()

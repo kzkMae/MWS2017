@@ -8,40 +8,6 @@ import json
 from Function import *
 from Function2 import *
 #関数定義
-#CSVファイルへの書き込み
-# def writeCSVfileNW(dir, filename, nwData):
-#     print 0
-#
-# #NW情報を分割して書き込む
-# def networkDivision(dirname, filename='network.json'):
-#     filename = '{path}/{name}'.format(path=dirname,name=filename)
-#     #print filename
-#     if not os.path.isfile(filename):
-#         print '\'{name}\' is not exist.'.format(name=filename)
-#     else:
-#         #print 'file exit'
-#         #networkデータを読み込む
-#         with open(filename,'r') as f:
-#             jsonNWData = json.load(f)
-#             #print jsonNWData.keys()
-#             #キー情報を取得
-#             for i in jsonNWData.keys():
-#                 #print i, len(jsonNWData[i])
-#                 if not(len(jsonNWData[i]) == 0):
-#                     #UDPの場合
-#                     if i == 'udp':
-#                         #print True
-#                         writeUdpData = []
-#
-#                         for j in jsonNWData[i]:
-#                             newudpData = [j['time']]
-#                             newudpData.extend(['{ip}:{port}'.format(ip=j['src'],port=j['sport'])])
-#                             newudpData.extend(['{ip}:{port}'.format(ip=j['dst'],port=j['dport'])])
-#                             newudpData.extend([j['offset']])
-#                             writeUdpData.append(newudpData)
-#                         print writeUdpData
-#                         #ファイルへの書き込み
-
 
 
 

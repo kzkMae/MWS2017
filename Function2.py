@@ -25,15 +25,26 @@ def isJsonFile(directory, folders, name):
 
 
 def readNetworkJson(directory, folders):
+    #存在するnetwork.jsonファイルのリストを取得
     networkjsonlist = isJsonFile(directory=directory,folders=folders,name='network')
-    #print networkjsonlist
-    if networkjsonlist is None:
+    if networkjsonlist is None: #存在するかを確認
         print "network.jsonが１つも存在しません"
         return
     for fileA in networkjsonlist:
-        print fileA
-        print os.path.basename(fileA)
-        print os.path.dirname(fileA)
+        #print os.path.basename(fileA)
+        specimenaname = os.path.dirname(fileA)
+        networkjson = NetworkJsonFile(name='network.json',cfolder=specimenaname)
+        #test
+        networkjson.getKey()
+        if networkjson.hasKey('udp'):
+            #print(networkjson.jkey)
+            networkjson.getUDP(networkjson.jdata)
+            #print(networkjson.udp)
+            print specimenaname
+            print os.path.basename(os.path.dirname(fileA))
+            #print networkjson.udpdatalist.__len__()
+            csvwriter = RWCsvFile('udpdata')
+            csvwriter.createPDCSV(where=specimenaname,data=networkjson.udpdatalist)
 
 
     print 'a'
