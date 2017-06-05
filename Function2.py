@@ -36,15 +36,40 @@ def readNetworkJson(directory, folders):
         networkjson = NetworkJsonFile(name='network.json',cfolder=specimenaname)
         #test
         networkjson.getKey()
-        if networkjson.hasKey('udp'):
-            #print(networkjson.jkey)
-            networkjson.getUDP(networkjson.jdata)
-            #print(networkjson.udp)
-            print specimenaname
-            print os.path.basename(os.path.dirname(fileA))
-            #print networkjson.udpdatalist.__len__()
-            csvwriter = RWCsvFile('udpdata')
-            csvwriter.createPDCSV(where=specimenaname,data=networkjson.udpdatalist)
+        # if networkjson.hasKey('udp'):
+        #     #print(networkjson.jkey)
+        #     networkjson.getUDP()
+        #     #print(networkjson.udp)
+        #     print specimenaname
+        #     print os.path.basename(os.path.dirname(fileA))
+        #     #print networkjson.udpdatalist.__len__()
+        #     csvwriter = RWCsvFile('udpdata')
+        #     csvwriter.createPDCSV(where=specimenaname,data=networkjson.udpdatalist)
+        # if networkjson.hasKey('tcp'):
+        #     networkjson.getTCP()
+        #     #print networkjson.tcp
+        #     csvwriter = RWCsvFile('tcpdata')
+        #     csvwriter.createPDCSV(where=specimenaname, data=networkjson.tcpdatalist)
+        # if networkjson.hasKey('hosts'):
+        #     a = networkjson.getHost()
+        #     #print hosts
+        #     csvwriter = RWCsvFile('hostdata')
+        #     csvwriter.createPDCSV(where=specimenaname, data=a)
+        # if networkjson.hasKey('http'):
+        #     networkjson.getHttp()
+        #     csvwriter = RWCsvFile('httpdata')
+        #     csvwriter.createPDCSV(where=specimenaname, data=networkjson.httpdatalist)
+        # if networkjson.hasKey('domains'):
+        #     #print 'b'
+        #     a = networkjson.getDomain()
+        #     #print a
+        #     csvwriter = RWCsvFile('domainlist')
+        #     csvwriter.createPDCSV(where=specimenaname, data=a)
+        if networkjson.hasKey('dns'):
+            #print 'b'
+            networkjson.getDNS()
+            csvwriter = RWCsvFile('dnsdata')
+            csvwriter.createPDCSV(where=specimenaname, data=networkjson.dnsdatalist)
 
 
     print 'a'

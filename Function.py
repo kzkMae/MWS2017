@@ -85,7 +85,7 @@ class RWCsvFile:
 
 
 
-    
+
 # フォルダリストを格納するクラス
 class FolderLists:
     def __init__(self, dir):
@@ -164,8 +164,8 @@ class OperateJsonFile:
 
 #Network専用のクラス（OperateJsonFileを継承）
 class NetworkJsonFile(OperateJsonFile):
-    def getUDP(self, jdata):
-        self.udp = jdata["udp"]
+    def getUDP(self):
+        self.udp = self.jdata["udp"]
         self._analyzeUDP()
     #UDP情報を整理リスト化
     def _analyzeUDP(self):
@@ -180,3 +180,68 @@ class NetworkJsonFile(OperateJsonFile):
             self.udpdatalist.append(udpdata)
         #print udpdatalist
         self.udpdatalist.sort()
+    def getTCP(self):
+        self.tcp = self.jdata["tcp"]
+        self._analyzeTCP()
+    # TCP情報を整理リスト化
+    def _analyzeTCP(self):
+        self.tcpdatalist = []
+        for data in self.tcp:
+            src = '{source}:{sport}'.format(source=data['src'],sport=data['sport'])
+            dst = '{dst}:{dport}'.format(dst=data['dst'],dport=data['dport'])
+            offset = data['offset']
+            tcptime = data['time']
+            tcpdata = [tcptime,src,dst,offset]
+            self.tcpdatalist.append(tcpdata)
+        self.tcpdatalist.sort()
+    #host情報整理
+    def getHost(self):
+        hosts = self.jdata["hosts"]
+        hosts.sort()
+        return hosts
+    #Http情報の整理リスト化
+    def getHttp(self):
+        self.http = self.jdata["http"]
+        self._analyzeHttp()
+    def _analyzeHttp(self):
+        self.httpdatalist = []
+        for data in self.http:
+            #print data
+            #hdata = data['data']
+            #print hdata
+            httpdata = [data['count'], data['method'], data['version'], data['host'],
+                        data['path'], data['uri']]
+            self.httpdatalist.append(httpdata)
+        self.httpdatalist.sort(reverse=True)
+    #ドメインとIPアドレスの対応
+    def getDomain(self):
+        domains = self.jdata['domains']
+        domaindatalist = []
+        for data in domains:
+            domaindata =[data['domain'],data['ip']]
+            #print domaindata
+            domaindatalist.append(domaindata)
+        #print 'c'
+        domaindatalist.sort()
+        return domaindatalist
+    #DNS情報を整理リスト化
+    def getDNS(self):
+        self.dns = self.jdata['dns']
+        self._analyzeDNS()
+    def _analyzeDNS(self):
+        self.dnsdatalist = []
+        for data in self.dns:
+            dnsdata = [data['request'], '','',data['type']]
+            if data['answers'].__len__() == 0:
+                dnsdata[1] = 'None'
+                dnsdata[2] ='None'
+                #print dnsdata
+                self.dnsdatalist.append(dnsdata)
+            else:
+                for ansdata in data['answers']:
+                    dnsdata[1] = ansdata['data']
+                    dnsdata[2] = ansdata['type']
+                    #print dnsdata
+                    self.dnsdatalist.append(dnsdata)
+            #for ansdata in data['answers']:
+        #print 'c'
