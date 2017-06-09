@@ -30,12 +30,8 @@ if __name__ == '__main__':
     #フォルダのリストを取得
     folders = FolderLists(pwd)
     #NetworkJsonの処理
-    readNetworkJson(directory=pwd,folders=folders.getFolderList())
+    #readNetworkJson(directory=pwd,folders=folders.getFolderList())
 
-    #作業しているフォルダを格納
-    # for i in files_dir:
-    #     #検体名と同じディレクトリ名のパスを生成
-    #     dirname = "{path}/{name}".format(path=workingfolder,name=i)
-    #     #print(dirname)
-    #     #print os.path.isdir(dirname)
-    #     networkDivision(dirname=dirname)
+    #BehaviorJsonの処理
+    readBehaviorJson(directory=pwd,folders=folders.getFolderList())
+

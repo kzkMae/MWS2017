@@ -245,3 +245,127 @@ class NetworkJsonFile(OperateJsonFile):
                     self.dnsdatalist.append(dnsdata)
             #for ansdata in data['answers']:
         #print 'c'
+    # ICMP情報を整理
+    def getICMP(self):
+        #print 'icmp '
+        icmplists = []
+        icmpdata = self.jdata["icmp"]
+        for a in icmpdata:
+            icmplist = [a['src'], a['dst'], a['type'], a['data']]
+            icmplists.append(icmplist)
+        icmplists.sort()
+        return icmplists
+    def getHttpEx(self):
+        self._analyzeHttpEx(datas='a')
+        print 'c'
+    def _analyzeHttpEx(self,datas):#作成途中
+        print 'd'
+    #そのほかにtls,icmp,smtp,mitm,dead_hosts,irc,https_exを作成予定
+
+# behavior情報を処理
+class BehaviorJsonFile(OperateJsonFile):
+    #Generic情報を整理リスト化
+    def getGeneric(self):
+        self.generic = self.jdata['generic']
+        return self._analyzeGeneric()
+    def _analyzeGeneric(self):
+        processdatas = []
+        processid = []
+        #print self.generic
+        for exedata in self.generic:
+            processdata = [exedata['first_seen'], exedata['process_name'],
+                           exedata['pid'], exedata['ppid']]
+            processid.append(processdata)
+            processsummary = [exedata['first_seen'], exedata['process_name']]
+            summarydatas = self._analyzeSummary(summary=exedata['summary'])
+            for i in summarydatas:
+                for k in i:
+                    a = processsummary + k
+                    processdatas.append(a)
+                #print a
+            #print exedata.keys() [u'ppid', u'first_seen', u'process_name', u'pid', u'summary']
+            #print processdata
+        return processdatas,processid
+    #Generic内のSummary情報を整理リスト化
+    def _analyzeSummary(self, summary):
+        summarydatas = []
+        #print summary.keys()
+        # [u'regkey_written', u'dll_loaded', u'file_opened', u'regkey_opened', u'mutex', u'guid', u'file_read', u'regkey_read']
+        #print summary.__len__()
+        #summaryがない場合Return
+        if summary.__len__() <= 0:
+            #print 'end'
+            return []
+        for key in summary.keys():
+            keydatas = []
+            #print key
+            for data in summary[key]:
+                #print data
+                if type(data) == list:
+                    keydata = [key, data]
+                else:
+                    keydata = [key, data.encode('utf8')]
+                #print keydata
+                keydatas.append(keydata)
+            #print keydatas
+            summarydatas.append(keydatas)
+        #print summarydatas
+        #print 'e'
+        return summarydatas
+    # apistateの情報を整理
+    def getAPIstate(self):
+        apilists = []
+        apistate = self.jdata['apistats']
+        keys = apistate.keys()
+        for key in keys:
+            apistatedata = apistate[key]
+            #a = apistatedata.items()
+            a = apistatedata.keys()
+            #print a
+            for i in a:
+                apilist = [i, apistatedata[i]]
+                #print apilist
+                apilists.append(apilist)
+        #print apistatedata[key]
+        #print apilists
+        apilists.sort(key=lambda x: x[1],reverse=True)
+        #print apilists
+        #print 'c'
+        return apilists
+    # processtreeの情報を整理リスト化
+    def getProcessTree(self):
+        self.processtree = self.jdata['processtree']
+        deldata, listdata =self._analyzeProcessTree(ptdatas=self.processtree)
+        listdata.sort()
+        return listdata
+    def _analyzeProcessTree(self, ptdatas):
+        processtreelists = []
+        plist = []
+        for ptdata in ptdatas:
+            plist.append(ptdata['process_name'])
+            processtreelist = [ptdata['first_seen'],ptdata['process_name'],
+                               ptdata['pid'],ptdata['ppid'],ptdata['command_line'].encode('utf8')]
+            #子プロセスを再帰的に処理
+            if ptdata['children'].__len__() > 0:
+                childlist, data = self._analyzeProcessTree(ptdatas=ptdata['children'])
+                #print data
+                processtreelist.append(childlist)
+                #print processtreelist
+                processtreelists.extend(data)
+                #print processtreelists
+            else:
+                processtreelist.append('child:None')
+                #print processtreelist
+            processtreelists.append(processtreelist)
+            #print 'a', processtreelists
+            #processtreelist.sort()
+        return plist, processtreelists
+    # processの情報を整理リスト化
+    def getProcesses(self):
+        print'c process'
+        self.process = self.jdata['processes']
+        for i in self.process:
+            #print 'd for'
+            self._analyzeProcess(processdata=i)
+    def _analyzeProcess(self, processdata):
+        print 'e analyze'
