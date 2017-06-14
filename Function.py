@@ -362,10 +362,35 @@ class BehaviorJsonFile(OperateJsonFile):
         return plist, processtreelists
     # processの情報を整理リスト化
     def getProcesses(self):
-        print'c process'
+        #print'c process'
         self.process = self.jdata['processes']
         for i in self.process:
             #print 'd for'
             self._analyzeProcess(processdata=i)
     def _analyzeProcess(self, processdata):
         print 'e analyze'
+        processdatas ={}
+        #[u'process_path', u'calls', u'track', u'pid', u'process_name', u'command_line', u'time', u'tid', u'first_seen', u'ppid', u'type']
+        #print processdata.keys()
+        processlist = [processdata['process_name'], processdata['first_seen'],
+                       processdata['pid'], processdata['ppid'],processdata['track'],
+                       processdata['tid'], processdata['type'],
+                       processdata['command_line'].encode('utf8')]
+        if processdata['calls'].__len__():
+            #print 'F'
+            self._analyzeCalls(calldatas=processdata['calls'])
+
+        processdatas[processdata['first_seen']] =processlist
+        #print processdatas
+        return processdatas
+    def _analyzeCalls(self,calldatas):
+        print 'g analyze'
+        callargulist = ['time','tid','api','category','status']
+        for calldata in calldatas:
+            calllist = [calldata['time'],calldata['tid'],calldata['api'],
+                        calldata['category'],calldata['status']]
+            if calldata['arguments'].__len__() > 0:
+                self._analyzeArguments(apiname=calldata['api'], argus=calldata['arguments'])
+            print 'h'
+    def _analyzeArguments(self, apiname, argus):
+        print 'argument'
